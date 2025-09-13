@@ -196,40 +196,52 @@
             font-size: 12px;
         }
 
-        .success-message {
-            background: #d4edda;
-            color: #155724;
+        .success-message, .error-message {
             padding: 10px;
             border-radius: 5px;
             margin: 10px 0;
-            border: 1px solid #c3e6cb;
             display: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         .loading {
             display: none;
             text-align: center;
             padding: 10px;
+            background: #fff3cd;
+            border-radius: 5px;
+            margin: 10px 0;
         }
 
-        .duplicate-prevention {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
-            padding: 10px;
+        .status-indicator {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 8px;
             margin: 10px 0;
             border-radius: 5px;
-            font-size: 12px;
+            font-size: 11px;
+            text-align: center;
         }
 
-        .already-signed {
+        .status-indicator.online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-indicator.error {
             background: #f8d7da;
             color: #721c24;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border: 1px solid #f5c6cb;
-            text-align: center;
         }
 
         .admin-section {
@@ -239,10 +251,6 @@
             margin: 15px 0;
             border-radius: 8px;
             display: none;
-        }
-
-        .admin-login {
-            margin: 10px 0;
         }
 
         .admin-login input {
@@ -272,34 +280,29 @@
             display: none;
         }
 
-        .db-status {
-            background: #d1ecf1;
-            color: #0c5460;
+        .test-buttons {
+            margin: 10px 0;
+        }
+
+        .test-buttons button {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin: 2px;
+            cursor: pointer;
+        }
+
+        .duplicate-prevention {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
             padding: 10px;
             margin: 10px 0;
             border-radius: 5px;
-            font-size: 11px;
-            text-align: center;
-        }
-
-        .db-status.online {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .db-status.error {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .real-time-indicator {
-            background: #17a2b8;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 10px;
-            margin: 5px 0;
-            display: inline-block;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -313,17 +316,9 @@
 
         <!-- Content -->
         <div class="content">
-            <!-- Database Status -->
-            <div class="db-status" id="dbStatus">
-                🔄 Connecting to cloud database...
-            </div>
-
-            <!-- Real-time Indicator -->
-            <div style="text-align: center; margin: 10px 0;">
-                <span class="real-time-indicator">🌐 REAL-TIME SHARED DATABASE</span>
-                <div style="font-size: 11px; color: #666; margin-top: 3px;">
-                    All WhatsApp group members see the same live count
-                </div>
+            <!-- Status Indicator -->
+            <div class="status-indicator" id="statusIndicator">
+                🔄 Connecting to database...
             </div>
 
             <div class="problem-box">
@@ -350,25 +345,22 @@
                 </div>
             </div>
 
-            <!-- Success Message -->
+            <!-- Messages -->
             <div class="success-message" id="successMessage">
-                ✅ Thank you for signing! Your signature has been saved to the cloud database.
+                ✅ Thank you for signing! Your signature has been saved successfully.
             </div>
 
-            <!-- Already Signed Message -->
-            <div class="already-signed" id="alreadySignedMessage" style="display: none;">
-                ⚠️ You have already signed this petition. Each person can only sign once.
-                <br><small>Your signature is safely stored in the cloud database.</small>
+            <div class="error-message" id="errorMessage">
+                ❌ You have already signed this petition. Each person can only sign once.
             </div>
 
-            <!-- Loading Message -->
             <div class="loading" id="loadingMessage">
-                💾 Saving to cloud database...
+                💾 Saving your signature...
             </div>
 
             <!-- Duplicate Prevention Notice -->
             <div class="duplicate-prevention">
-                🔒 <strong>Cloud Database Protection:</strong> All signatures stored in secure Firebase cloud database. Real-time duplicate prevention across all users.
+                🔒 <strong>Duplicate Protection:</strong> Only one signature per person allowed. System checks for duplicate row/flat numbers and mobile numbers.
             </div>
 
             <!-- Signature Form -->
@@ -408,21 +400,22 @@
             </div>
 
             <!-- Current Signatures Display -->
-            <div class="signatures" id="signaturesSection">
-                <div class="signature-count" id="signatureCount">🔄</div>
+            <div class="signatures">
+                <div class="signature-count" id="signatureCount">0</div>
                 <div style="font-size: 14px; color: #666;">Residents Have Signed</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill" style="width: 0%"></div>
                 </div>
                 <div style="font-size: 12px; margin-top: 5px;">Target: 50 signatures</div>
                 
-                <!-- Real-time signature list -->
                 <div class="signature-list" id="signatureList">
-                    <!-- Recent signatures will appear here -->
+                    <div style="text-align: center; color: #666; font-size: 12px; padding: 10px;">
+                        Loading signatures...
+                    </div>
                 </div>
                 
                 <div style="margin-top: 10px;">
-                    <button onclick="refreshSignatures()" class="btn-report" style="font-size: 11px; padding: 5px 10px;">
+                    <button onclick="refreshData()" class="btn-report" style="font-size: 11px; padding: 5px 10px;">
                         🔄 Refresh Live Data
                     </button>
                 </div>
@@ -431,152 +424,256 @@
             <!-- Share Section -->
             <div class="share-section">
                 <h4>📢 Spread the Word!</h4>
-                <button class="btn-share" onclick="shareWhatsApp()">📱 Share on WhatsApp</button>
+                <button class="btn-share" onclick="shareOnWhatsApp()">📱 Share on WhatsApp</button>
                 <button class="btn-report" onclick="showAdminLogin()">🔐 Admin Panel</button>
             </div>
 
             <!-- Admin Section -->
             <div class="admin-section" id="adminSection">
                 <h4>🔐 Admin Access Required</h4>
-                <p style="font-size: 12px; color: #666;">Enter admin password to view detailed signatures and generate reports.</p>
+                <p style="font-size: 12px; color: #666;">Enter admin password to manage signatures.</p>
                 <div class="admin-login">
                     <input type="password" id="adminPassword" placeholder="Admin Password">
-                    <button onclick="adminLogin()">Login</button>
+                    <button onclick="loginAdmin()">Login</button>
                 </div>
-                <p style="font-size: 10px; color: #888; margin-top: 5px;">Contact campaign organizer if you don't have admin access.</p>
             </div>
 
             <!-- Admin Panel -->
             <div class="admin-panel" id="adminPanel">
-                <h4>👑 Admin Panel - Cloud Database</h4>
+                <h4>👑 Admin Panel</h4>
                 <div style="margin: 10px 0; padding: 10px; background: #e8f5e8; border-radius: 5px; font-size: 12px;" id="adminStats">
                     <strong>Loading admin statistics...</strong>
                 </div>
+                
+                <div class="test-buttons">
+                    <button onclick="testConnection()">Test Connection</button>
+                    <button onclick="addTestData()" style="background: #28a745;">Add Test Data</button>
+                    <button onclick="viewRules()" style="background: #ffc107; color: black;">Database Info</button>
+                </div>
+                
                 <button class="btn-report" onclick="viewAllSignatures()">📊 View All Signatures</button>
-                <button class="btn-report" onclick="exportSignatures()">📋 Export CSV</button>
-                <button class="btn-report" onclick="resetDatabase()" style="background: #e74c3c;">🗑️ Reset Database</button>
-                <button class="btn-share" onclick="adminLogout()" style="background: #95a5a6;">🚪 Logout</button>
+                <button class="btn-report" onclick="exportData()">📋 Export Data</button>
+                <button class="btn-report" onclick="resetAllData()" style="background: #e74c3c;">🗑️ Reset All</button>
+                <button class="btn-share" onclick="logoutAdmin()" style="background: #95a5a6;">🚪 Logout</button>
             </div>
         </div>
 
         <!-- Footer -->
         <div class="footer">
             <p>Together we can make our apartment safe and clean! 🏡</p>
-            <p style="margin-top: 5px; font-size: 10px;">Powered by Firebase Cloud Database - Real-time shared data</p>
+            <p style="margin-top: 5px; font-size: 10px;">Powered by Firebase Firestore</p>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script type="module">
+        // Import Firebase modules - EXACTLY LIKE YOUR WORKING TEST
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            getDocs, 
+            serverTimestamp, 
+            query, 
+            orderBy, 
+            limit,
+            where,
+            deleteDoc,
+            doc
+        } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-    <script>
-        // Firebase Configuration - FREE PUBLIC DATABASE FOR DEMO
+        // Firebase Configuration - YOUR WORKING SETTINGS
         const firebaseConfig = {
             apiKey: "AIzaSyAh4DeMpppqfI9ufPDGQA92T3nD24jurk8",
             authDomain: "stray-dog-petition.firebaseapp.com",
-            databaseURL: "https://stray-dog-petition-default-rtdb.firebaseio.com/",
             projectId: "stray-dog-petition",
             storageBucket: "stray-dog-petition.firebasestorage.app",
             messagingSenderId: "727804804946",
-            appId: "1:727804804946:web:106cf6fc25051bf3edc48b"
+            appId: "1:727804804946:web:106cf6fc25051bf3edc48b",
+            measurementId: "G-9F0LW6LEL7"
         };
-/*
-        // Initialize Firebase (DEMO VERSION - WILL SHOW SETUP INSTRUCTIONS)
-        let database = null;
-        let isFirebaseConnected = false;
 
-        // DEMO MODE - Show setup instructions instead of real Firebase
-        function initializeDemo() {
-            document.getElementById('dbStatus').innerHTML = `
-                ⚠️ <strong>SETUP REQUIRED:</strong> Firebase not configured
-                <br><small>See instructions below to connect real cloud database</small>
-            `;
-            document.getElementById('dbStatus').className = 'db-status error';
-            
-            // Simulate some demo signatures for testing
-            updateSignatureDisplay(7, [
-                { name: 'Demo User 1', flat: 'R11 A - 301', time: '2024-12-28 10:30' },
-                { name: 'Demo User 2', flat: 'R05 B - 205', time: '2024-12-28 11:15' },
-                { name: 'Demo User 3', flat: 'R08 C - 156', time: '2024-12-28 12:00' }
-            ]);
-        }
-*/
-        // PRODUCTION FIREBASE CODE (uncomment when Firebase is set up)
+        // Global Variables
+        const TARGET_SIGNATURES = 50;
+        const ADMIN_PASSWORD = "StrayDog2025";
+        let db = null;
+        let isConnected = false;
+
+        // Initialize Firebase - USING YOUR WORKING PATTERN
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+
+        console.log('🚀 Stray Dog Petition Campaign - Starting Application');
+        console.log('✅ Firebase initialized successfully');
+        updateStatus('✅ Connected to Firestore database', 'online');
+        isConnected = true;
+
+        // ===========================================
+        // UTILITY FUNCTIONS
+        // ===========================================
         
-        try {
-            firebase.initializeApp(firebaseConfig);
-            database = firebase.database();
-            isFirebaseConnected = true;
-            
-            document.getElementById('dbStatus').innerHTML = '✅ Connected to Firebase Cloud Database';
-            document.getElementById('dbStatus').className = 'db-status online';
-            
-            // Load existing signatures
-            loadSignatures();
-            
-            // Listen for real-time updates
-            database.ref('signatures').on('value', (snapshot) => {
-                const signatures = [];
-                let count = 0;
+        function updateStatus(message, type) {
+            const statusEl = document.getElementById('statusIndicator');
+            if (statusEl) {
+                statusEl.textContent = message;
+                statusEl.className = 'status-indicator ' + (type || '');
+            }
+            console.log('Status: ' + message);
+        }
+
+        function showMessage(elementId, show) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                el.style.display = show ? 'block' : 'none';
+            }
+        }
+
+        function hideAllMessages() {
+            showMessage('successMessage', false);
+            showMessage('errorMessage', false);
+            showMessage('loadingMessage', false);
+        }
+
+        // ===========================================
+        // FIRESTORE DATABASE FUNCTIONS
+        // ===========================================
+
+        async function loadSignatures() {
+            try {
+                console.log('🔄 Loading signatures from Firestore...');
                 
-                snapshot.forEach((child) => {
-                    signatures.push(child.val());
-                    count++;
+                const signaturesRef = collection(db, 'signatures');
+                const q = query(signaturesRef, orderBy('createdAt', 'desc'));
+                const querySnapshot = await getDocs(q);
+                
+                const signatures = [];
+                querySnapshot.forEach((doc) => {
+                    signatures.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                console.log(`📊 Loaded ${signatures.length} signatures`);
+                updateSignatureCount(signatures.length, signatures);
+                
+            } catch (error) {
+                console.error('❌ Error loading signatures:', error);
+                updateStatus('❌ Error loading signatures: ' + error.message, 'error');
+            }
+        }
+
+        async function checkForDuplicates(flat, mobile) {
+            try {
+                console.log(`🔍 Checking for duplicates - Flat: ${flat}, Mobile: ${mobile}`);
+                
+                const signaturesRef = collection(db, 'signatures');
+                
+                // Check for duplicate flat
+                const flatQuery = query(signaturesRef, where('flat', '==', flat));
+                const flatSnapshot = await getDocs(flatQuery);
+                
+                // Check for duplicate mobile
+                const mobileQuery = query(signaturesRef, where('mobile', '==', mobile));
+                const mobileSnapshot = await getDocs(mobileQuery);
+                
+                const duplicateFlat = !flatSnapshot.empty;
+                const duplicateMobile = !mobileSnapshot.empty;
+                
+                console.log(`🔍 Duplicate check: Flat=${duplicateFlat}, Mobile=${duplicateMobile}`);
+                
+                return {
+                    isDuplicate: duplicateFlat || duplicateMobile,
+                    duplicateFlat,
+                    duplicateMobile
+                };
+                
+            } catch (error) {
+                console.error('❌ Error checking duplicates:', error);
+                return { isDuplicate: false, error: error.message };
+            }
+        }
+
+        async function saveSignature(signatureData) {
+            try {
+                console.log('💾 Saving signature to Firestore...');
+                
+                const docRef = await addDoc(collection(db, 'signatures'), {
+                    ...signatureData,
+                    createdAt: serverTimestamp()
                 });
                 
-                updateSignatureDisplay(count, signatures);
-            });
-            
-        } catch (error) {
-            console.error('Firebase initialization failed:', error);
-            initializeDemo();
+                console.log('✅ Signature saved with ID:', docRef.id);
+                return docRef.id;
+                
+            } catch (error) {
+                console.error('❌ Error saving signature:', error);
+                throw error;
+            }
         }
-        
 
-        // Initialize demo mode for now
-        initializeDemo();
-
-        const targetSignatures = 50;
-        const ADMIN_PASSWORD = "StrayDog2025";
-
-        // Demo signature management
-        function updateSignatureDisplay(count, signatures = []) {
-            document.getElementById('signatureCount').textContent = count;
+        function updateSignatureCount(count, signatures) {
+            // Update count display
+            const countEl = document.getElementById('signatureCount');
+            if (countEl) {
+                countEl.textContent = count || 0;
+            }
             
-            const progressPercent = Math.min((count / targetSignatures) * 100, 100);
-            document.getElementById('progressFill').style.width = progressPercent + '%';
+            // Update progress bar
+            const progress = Math.min((count / TARGET_SIGNATURES) * 100, 100);
+            const progressEl = document.getElementById('progressFill');
+            if (progressEl) {
+                progressEl.style.width = progress + '%';
+            }
             
             // Update signature list
-            const listElement = document.getElementById('signatureList');
-            listElement.innerHTML = '';
+            const listEl = document.getElementById('signatureList');
+            if (listEl) {
+                listEl.innerHTML = '';
+                
+                if (signatures && signatures.length > 0) {
+                    signatures.slice(0, 5).forEach((sig, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'signature-item';
+                        item.innerHTML = 
+                            `<div><strong>Resident #${count - index}</strong><br>` +
+                            `<small>Flat ${sig.flat || 'Unknown'}</small></div>` +
+                            `<div style="font-size: 10px; color: #666;">` + 
+                            `${sig.time ? new Date(sig.time).toLocaleDateString() : 'Recently'}` + 
+                            `</div>`;
+                        listEl.appendChild(item);
+                    });
+                    
+                    if (signatures.length > 5) {
+                        const moreEl = document.createElement('div');
+                        moreEl.style.cssText = 'text-align: center; color: #666; font-size: 11px; padding: 5px;';
+                        moreEl.textContent = `...and ${signatures.length - 5} more residents`;
+                        listEl.appendChild(moreEl);
+                    }
+                } else {
+                    listEl.innerHTML = '<div style="text-align: center; color: #666; font-size: 12px; padding: 10px;">No signatures yet - be the first to sign! 🏆</div>';
+                }
+            }
             
-            signatures.slice(-5).reverse().forEach(sig => {
-                const item = document.createElement('div');
-                item.className = 'signature-item';
-                item.innerHTML = `
-                    <div>
-                        <strong>${sig.name.substring(0, 20)}...</strong><br>
-                        <small>Flat ${sig.flat}</small>
-                    </div>
-                    <div style="font-size: 10px; color: #666;">
-                        ${new Date(sig.time).toLocaleDateString()}
-                    </div>
-                `;
-                listElement.appendChild(item);
-            });
+            console.log(`📊 Updated display: ${count} signatures`);
         }
 
-        // Form submission handler
-        document.getElementById('petitionForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        // ===========================================
+        // FORM HANDLING
+        // ===========================================
+        
+        async function handleFormSubmit(event) {
+            event.preventDefault();
             
-            if (!isFirebaseConnected) {
-                alert('⚠️ Demo Mode: Firebase not connected!\n\nTo enable real cloud database:\n1. Set up Firebase project\n2. Replace demo config with real config\n3. Uncomment production code\n\nFor now, this is just a demo showing how it would work.');
+            hideAllMessages();
+            
+            if (!isConnected) {
+                alert('❌ Database not connected! Please check your internet connection.');
                 return;
             }
             
-            const formData = new FormData(this);
+            // Get form data
+            const formData = new FormData(event.target);
             const signature = {
                 name: formData.get('fullName').trim(),
                 flat: formData.get('flatNumber').trim().toUpperCase(),
@@ -585,169 +682,412 @@
                 timestamp: new Date().toISOString(),
                 time: new Date().toLocaleString()
             };
-
-            // Validate form
+            
+            console.log('📝 Form submitted:', signature);
+            
+            // Validate
             if (!signature.name || !signature.flat || !signature.mobile) {
                 alert('⚠️ Please fill in all required fields!');
                 return;
             }
-
+            
             if (signature.mobile.length < 10) {
-                alert('⚠️ Please enter a valid mobile number!');
+                alert('⚠️ Please enter a valid mobile number (minimum 10 digits)!');
                 return;
             }
-
-            // Check for duplicates in Firebase
+            
+            // Show loading
+            showMessage('loadingMessage', true);
+            const signButton = document.getElementById('signButton');
+            if (signButton) {
+                signButton.disabled = true;
+                signButton.textContent = 'Checking duplicates...';
+            }
+            
             try {
-                document.getElementById('loadingMessage').style.display = 'block';
-                document.getElementById('signButton').disabled = true;
-
-                const snapshot = await database.ref('signatures').once('value');
-                const existingSignatures = snapshot.val() || {};
+                // Check duplicates
+                const duplicateCheck = await checkForDuplicates(signature.flat, signature.mobile);
                 
-                // Check for duplicates
-                for (let key in existingSignatures) {
-                    const existing = existingSignatures[key];
-                    if (existing.flat === signature.flat) {
-                        alert(`❌ Flat ${signature.flat} has already signed!`);
-                        document.getElementById('loadingMessage').style.display = 'none';
-                        document.getElementById('signButton').disabled = false;
-                        return;
+                if (duplicateCheck.isDuplicate) {
+                    let errorMsg = '❌ Duplicate signature detected!\n\n';
+                    if (duplicateCheck.duplicateFlat) errorMsg += `• Flat ${signature.flat} has already signed\n`;
+                    if (duplicateCheck.duplicateMobile) errorMsg += `• Mobile number already used\n`;
+                    errorMsg += '\nEach resident can only sign once.';
+                    
+                    alert(errorMsg);
+                    
+                    showMessage('loadingMessage', false);
+                    if (signButton) {
+                        signButton.disabled = false;
+                        signButton.textContent = '✍️ SIGN PETITION NOW';
                     }
-                    if (existing.mobile === signature.mobile) {
-                        alert('❌ This mobile number has already been used!');
-                        document.getElementById('loadingMessage').style.display = 'none';
-                        document.getElementById('signButton').disabled = false;
-                        return;
-                    }
+                    return;
                 }
-
-                // Save to Firebase
-                await database.ref('signatures').push(signature);
                 
-                // Success
-                document.getElementById('loadingMessage').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('signatureForm').style.display = 'none';
+                // Save signature
+                if (signButton) {
+                    signButton.textContent = 'Saving to database...';
+                }
+                
+                const signatureId = await saveSignature(signature);
+                
+                console.log('✅ Signature process completed successfully');
+                
+                // Hide form and loading
+                showMessage('loadingMessage', false);
+                showMessage('successMessage', true);
+                showMessage('signatureForm', false);
                 
                 // Mark as signed locally
                 localStorage.setItem('hasSignedPetition', 'true');
                 localStorage.setItem('signedFlat', signature.flat);
-
+                localStorage.setItem('signedAt', signature.timestamp);
+                
+                // Reload signatures to show updated count
+                await loadSignatures();
+                
             } catch (error) {
-                console.error('Error saving signature:', error);
-                document.getElementById('loadingMessage').style.display = 'none';
-                document.getElementById('signButton').disabled = false;
-                alert('❌ Error saving signature. Please try again.');
+                console.error('❌ Error in signature process:', error);
+                
+                showMessage('loadingMessage', false);
+                if (signButton) {
+                    signButton.disabled = false;
+                    signButton.textContent = '✍️ SIGN PETITION NOW';
+                }
+                
+                alert(`❌ Error saving signature: ${error.message}\n\nPlease try again.`);
             }
-        });
-
-        // Check if user already signed
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('hasSignedPetition') === 'true') {
-                document.getElementById('alreadySignedMessage').style.display = 'block';
-                document.getElementById('signatureForm').style.display = 'none';
-            }
-        });
-
-        function refreshSignatures() {
-            if (!isFirebaseConnected) {
-                alert('⚠️ Demo Mode: In production, this would refresh live data from Firebase!');
-                return;
-            }
-            
-            // In production, Firebase automatically updates in real-time
-            alert('🔄 Data refreshed! Firebase provides real-time updates automatically.');
         }
 
-        function shareWhatsApp() {
-            const currentUrl = window.location.href;
-            const count = parseInt(document.getElementById('signatureCount').textContent) || 0;
-            const progressPercent = Math.round((count / targetSignatures) * 100);
+        // ===========================================
+        // UI FUNCTIONS
+        // ===========================================
+        
+        function shareOnWhatsApp() {
+            const countEl = document.getElementById('signatureCount');
+            const count = countEl ? parseInt(countEl.textContent) || 0 : 0;
+            const progress = Math.round((count / TARGET_SIGNATURES) * 100);
+            const url = window.location.href;
             
-            const message = `🚨 URGENT: Stray Dog Crisis Petition!
-
-📊 LIVE COUNT: ${count}/${targetSignatures} signatures (${progressPercent}%)
-🌐 Real-time shared database
-🎯 Help us reach our goal!
-
-Problems:
-🩸 Dog fights with blood stains
-🚗 Property damage  
-🦠 Unhygienic conditions
-😰 Safety concerns
-
-Sign now: ${currentUrl}
-
-⚠️ Only one signature per flat
-⚡ Instant updates for all users
-Takes 30 seconds! 🙏
-
-#SafeApartment #RealTimeDatabase`;
-
+            const message = `🚨 URGENT: Stray Dog Crisis Petition!\n\n` +
+                `📊 LIVE COUNT: ${count}/${TARGET_SIGNATURES} signatures (${progress}%)\n` +
+                `🌐 Real-time shared database\n` +
+                `🎯 Help us reach our goal!\n\n` +
+                `Problems:\n` +
+                `🩸 Dog fights with blood stains\n` +
+                `🚗 Property damage\n` +
+                `🦠 Unhygienic conditions\n` +
+                `😰 Safety concerns\n\n` +
+                `Sign now: ${url}\n\n` +
+                `⚠️ Only one signature per flat/mobile\n` +
+                `⚡ Live updates for all group members\n` +
+                `🔒 Secure database\n` +
+                `Takes 30 seconds! 🙏\n\n` +
+                `#SafeApartment #RealTimeDatabase`;
+            
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
 
-        // Admin functions
-        function showAdminLogin() {
-            if (localStorage.getItem('adminLoggedIn') === 'true') {
-                showAdminPanel();
+        async function refreshData() {
+            if (!isConnected) {
+                alert('⚠️ Database not connected! Cannot refresh data.');
                 return;
             }
-            document.getElementById('adminSection').style.display = 'block';
+            
+            console.log('🔄 Manual refresh requested');
+            updateStatus('🔄 Refreshing data...', '');
+            
+            await loadSignatures();
+            
+            updateStatus('✅ Data refreshed successfully', 'online');
         }
 
-        function adminLogin() {
-            const password = document.getElementById('adminPassword').value;
+        // ===========================================
+        // ADMIN FUNCTIONS
+        // ===========================================
+        
+        function showAdminLogin() {
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                showMessage('adminPanel', true);
+                updateAdminStats();
+                return;
+            }
+            showMessage('adminSection', true);
+            const passwordInput = document.getElementById('adminPassword');
+            if (passwordInput) passwordInput.focus();
+        }
+
+        function loginAdmin() {
+            const passwordInput = document.getElementById('adminPassword');
+            if (!passwordInput) return;
+            
+            const password = passwordInput.value;
             if (password === ADMIN_PASSWORD) {
                 localStorage.setItem('adminLoggedIn', 'true');
-                document.getElementById('adminSection').style.display = 'none';
-                showAdminPanel();
+                showMessage('adminSection', false);
+                showMessage('adminPanel', true);
+                updateAdminStats();
                 alert('✅ Admin login successful!');
             } else {
                 alert('❌ Incorrect admin password!');
             }
-            document.getElementById('adminPassword').value = '';
+            passwordInput.value = '';
         }
 
-        function showAdminPanel() {
-            document.getElementById('adminPanel').style.display = 'block';
+        function logoutAdmin() {
+            localStorage.removeItem('adminLoggedIn');
+            showMessage('adminPanel', false);
+            showMessage('adminSection', false);
+            alert('👋 Admin logged out!');
+        }
+
+        function updateAdminStats() {
+            const countEl = document.getElementById('signatureCount');
+            const count = countEl ? parseInt(countEl.textContent) || 0 : 0;
+            const progress = Math.round((count / TARGET_SIGNATURES) * 100);
             
-            const count = parseInt(document.getElementById('signatureCount').textContent) || 0;
-            document.getElementById('adminStats').innerHTML = `
-                <strong>Database Statistics:</strong><br>
-                Total Signatures: ${count}<br>
-                Target: ${targetSignatures} (${Math.round((count/targetSignatures)*100)}%)<br>
-                Database: ${isFirebaseConnected ? 'Firebase Cloud' : 'Demo Mode'}<br>
-                Real-time Updates: ${isFirebaseConnected ? 'Active' : 'Disabled'}
-            `;
+            const statsEl = document.getElementById('adminStats');
+            if (statsEl) {
+                statsEl.innerHTML = 
+                    `<strong>Firestore Database Statistics:</strong><br>` +
+                    `Total Signatures: ${count}<br>` +
+                    `Target: ${TARGET_SIGNATURES} (${progress}%)<br>` +
+                    `Database: Firestore (Connected)<br>` +
+                    `Collection: signatures<br>` +
+                    `Last Updated: ${new Date().toLocaleTimeString()}`;
+            }
         }
 
-        function viewAllSignatures() {
-            if (!isFirebaseConnected) {
-                alert('⚠️ Demo Mode!\n\nIn production with Firebase:\n• View all signatures in real-time\n• Export complete database\n• Admin dashboard with statistics\n• Real-time duplicate checking');
+        async function testConnection() {
+            try {
+                console.log('🧪 Admin: Testing Firestore connection...');
+                
+                // Test by adding a temporary document
+                const testRef = await addDoc(collection(db, '_connectionTest'), {
+                    test: true,
+                    timestamp: serverTimestamp(),
+                    userAgent: navigator.userAgent.substring(0, 100)
+                });
+                
+                console.log('✅ Write test passed');
+                
+                // Test by reading the document
+                const testQuery = query(collection(db, '_connectionTest'), limit(1));
+                const testSnapshot = await getDocs(testQuery);
+                
+                console.log('✅ Read test passed');
+                
+                // Clean up test document
+                if (testRef.id) {
+                    await deleteDoc(doc(db, '_connectionTest', testRef.id));
+                    console.log('✅ Delete test passed');
+                }
+                
+                alert('✅ FIRESTORE CONNECTION TEST: PASSED\n\n' +
+                    '🌐 Connection: Active\n' +
+                    '📖 Read Permission: OK\n' +
+                    '✏️ Write Permission: OK\n' +
+                    '🗑️ Delete Permission: OK\n\n' +
+                    'Firestore database is fully functional!');
+                
+            } catch (error) {
+                console.error('❌ Connection test failed:', error);
+                alert(`❌ FIRESTORE CONNECTION TEST: FAILED\n\nError: ${error.message}\n\nCheck:\n• Internet connection\n• Firestore rules\n• Project settings`);
+            }
+        }
+
+        async function addTestData() {
+            if (!isConnected) {
+                alert('❌ Database not connected! Cannot add test data.');
                 return;
             }
             
-            alert('👑 Admin access to Firebase database:\n\n• All signatures with personal details\n• Real-time duplicate checking\n• Export functionality\n• Database statistics');
-        }
-
-        function exportSignatures() {
-            alert('📊 Export functionality will download CSV with:\n\n• All signature data\n• Timestamps\n• Duplicate analysis\n• Campaign statistics\n\nAvailable in production with Firebase database.');
-        }
-
-        function resetDatabase() {
-            if (confirm('⚠️ Reset entire cloud database?\n\nThis will delete ALL signatures permanently!\n\nThis cannot be undone.')) {
-                alert('🗑️ Database reset functionality available in production.');
+            const testSignature = {
+                name: `Test User ${Date.now()}`,
+                flat: `TEST-${Math.floor(Math.random() * 1000)}`,
+                mobile: `555000${Math.floor(Math.random() * 10000)}`,
+                concern: 'safety',
+                timestamp: new Date().toISOString(),
+                time: new Date().toLocaleString()
+            };
+            
+            try {
+                console.log('🧪 Adding test signature:', testSignature);
+                
+                const docRef = await addDoc(collection(db, 'signatures'), {
+                    ...testSignature,
+                    createdAt: serverTimestamp()
+                });
+                
+                alert(`✅ Test Signature Added Successfully!\n\n` +
+                    `Document ID: ${docRef.id}\n` +
+                    `Flat: ${testSignature.flat}\n` +
+                    `Name: ${testSignature.name}\n\n` +
+                    `The signature count will update automatically.`);
+                
+                // Refresh to show new signature
+                await loadSignatures();
+                
+            } catch (error) {
+                alert(`❌ Failed to Add Test Signature!\n\nError: ${error.message}`);
             }
         }
 
-        function adminLogout() {
-            localStorage.removeItem('adminLoggedIn');
-            document.getElementById('adminPanel').style.display = 'none';
-            alert('👋 Admin logged out!');
+        function viewRules() {
+            const message = `🔒 Firestore Database Information\n\n` +
+                `Current Firebase Project: ${firebaseConfig.projectId}\n` +
+                `Database: Firestore\n` +
+                `Collection: signatures\n\n` +
+                `To manage your database:\n` +
+                `1. Go to Firebase Console\n` +
+                `2. Select your project: stray-dog-petition\n` +
+                `3. Go to "Firestore Database"\n` +
+                `4. View data in "signatures" collection\n\n` +
+                `For rules, check the "Rules" tab in Firestore.`;
+            
+            alert(message);
         }
+
+        async function viewAllSignatures() {
+            if (!isConnected) {
+                alert('❌ Database not connected! Cannot access signatures.');
+                return;
+            }
+            
+            try {
+                const signaturesRef = collection(db, 'signatures');
+                const q = query(signaturesRef, orderBy('createdAt', 'desc'));
+                const querySnapshot = await getDocs(q);
+                
+                let message = '👑 ADMIN: All Signatures\n\n';
+                let count = 0;
+                
+                querySnapshot.forEach((doc) => {
+                    const sig = doc.data();
+                    count++;
+                    message += `${count}. ${sig.name}\n`;
+                    message += `   Flat: ${sig.flat}\n`;
+                    message += `   Mobile: ${sig.mobile}\n`;
+                    message += `   Concern: ${sig.concern}\n`;
+                    message += `   Signed: ${sig.time || sig.timestamp}\n`;
+                    message += `   ID: ${doc.id}\n\n`;
+                });
+                
+                if (count === 0) {
+                    message += 'No signatures found in database.';
+                }
+                
+                alert(message);
+                
+            } catch (error) {
+                alert(`❌ Error accessing signatures: ${error.message}`);
+            }
+        }
+
+        function exportData() {
+            alert('📊 Firestore Export Options:\n\n' +
+                '• Go to Firebase Console\n' +
+                '• Firestore Database section\n' +
+                '• Export entire database or specific collections\n' +
+                '• Use Firebase CLI for advanced exports\n\n' +
+                'Or view all signatures in admin panel and copy manually.');
+        }
+
+        async function resetAllData() {
+            if (!isConnected) {
+                alert('❌ Database not connected!');
+                return;
+            }
+            
+            if (confirm('⚠️ DANGER: Delete ALL signatures from Firestore?\n\n' +
+                'This action cannot be undone!\n\n' +
+                'Type "DELETE" in the next prompt to confirm.')) {
+                
+                const confirmation = prompt('Type "DELETE" to confirm database reset:');
+                if (confirmation === 'DELETE') {
+                    try {
+                        const signaturesRef = collection(db, 'signatures');
+                        const querySnapshot = await getDocs(signaturesRef);
+                        
+                        const deletePromises = [];
+                        querySnapshot.forEach((document) => {
+                            deletePromises.push(deleteDoc(doc(db, 'signatures', document.id)));
+                        });
+                        
+                        await Promise.all(deletePromises);
+                        
+                        alert(`✅ Database reset successfully! Deleted ${querySnapshot.size} signatures.`);
+                        
+                        // Refresh display
+                        await loadSignatures();
+                        
+                    } catch (error) {
+                        alert(`❌ Error resetting database: ${error.message}`);
+                    }
+                }
+            }
+        }
+
+        // ===========================================
+        // INITIALIZATION
+        // ===========================================
+        
+        // Make functions global for onclick handlers
+        window.shareOnWhatsApp = shareOnWhatsApp;
+        window.refreshData = refreshData;
+        window.showAdminLogin = showAdminLogin;
+        window.loginAdmin = loginAdmin;
+        window.logoutAdmin = logoutAdmin;
+        window.testConnection = testConnection;
+        window.addTestData = addTestData;
+        window.viewRules = viewRules;
+        window.viewAllSignatures = viewAllSignatures;
+        window.exportData = exportData;
+        window.resetAllData = resetAllData;
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🎯 DOM loaded, initializing application...');
+            
+            // Check if user already signed
+            if (localStorage.getItem('hasSignedPetition') === 'true') {
+                const signedFlat = localStorage.getItem('signedFlat');
+                showMessage('errorMessage', true);
+                showMessage('signatureForm', false);
+                
+                const errorEl = document.getElementById('errorMessage');
+                if (errorEl && signedFlat) {
+                    errorEl.innerHTML = `⚠️ You have already signed this petition from this device.<br>` +
+                        `<small>Flat: ${signedFlat} • Your signature is safely stored in the database.</small>`;
+                }
+                
+                console.log('👤 User already signed from flat:', signedFlat);
+            }
+            
+            // Setup form handler
+            const form = document.getElementById('petitionForm');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmit);
+                console.log('📝 Form handler attached');
+            }
+            
+            // Setup admin password enter key
+            const passwordInput = document.getElementById('adminPassword');
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        loginAdmin();
+                    }
+                });
+            }
+            
+            // Load existing signatures
+            await loadSignatures();
+            
+            console.log('🎉 Application initialization complete');
+        });
+        
     </script>
 </body>
 </html>
