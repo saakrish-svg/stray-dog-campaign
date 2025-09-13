@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐕 Stop Stray Dog Issues - Sign Now!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            padding: 10px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff4757, #ff3742);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .problem-box {
+            background: #ffe6e6;
+            border-left: 4px solid #ff4757;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .problem-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .problem-item span {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .btn-sign {
+            width: 100%;
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        .btn-sign:hover {
+            background: #219a52;
+        }
+
+        .signatures {
+            background: #e8f5e8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .signature-count {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .signature-list {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .signature-item {
+            background: white;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 12px;
+            border-left: 3px solid #27ae60;
+        }
+
+        .share-section {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .btn-share {
+            background: #25d366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .btn-report {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            background: #ddd;
+            height: 8px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: #27ae60;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚨 URGENT: Stray Dog Crisis</h1>
+            <p>Help Make Our Apartment Safe Again!</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="problem-box">
+                <h3 style="color: #c0392b; margin-bottom: 10px;">Problems We're Facing:</h3>
+                <div class="problem-item">
+                    <span>🩸</span>
+                    <div>Dog fights leaving blood stains in corridors</div>
+                </div>
+                <div class="problem-item">
+                    <span>🚗</span>
+                    <div>Scratched cars and damaged property</div>
+                </div>
+                <div class="problem-item">
+                    <span>🦠</span>
+                    <div>Unhygienic conditions and waste everywhere</div>
+                </div>
+                <div class="problem-item">
+                    <span>😰</span>
+                    <div>Children and elderly feeling unsafe</div>
+                </div>
+                <div class="problem-item">
+                    <span>🏠</span>
+                    <div>Property value declining</div>
+                </div>
+            </div>
+
+            <!-- Signature Form -->
+            <div class="form-section">
+                <h3 style="margin-bottom: 10px;">📝 Sign the Petition</h3>
+                <div class="form-group">
+                    <label>Full Name*</label>
+                    <input type="text" id="fullName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Flat Number*</label>
+                    <input type="text" id="flatNumber" placeholder="e.g., A-101" required>
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number*</label>
+                    <input type="tel" id="mobile" placeholder="Enter mobile number" required>
+                </div>
+                <div class="form-group">
+                    <label>Your Main Concern</label>
+                    <select id="concern">
+                        <option value="">Select primary concern</option>
+                        <option value="safety">Safety of family members</option>
+                        <option value="property">Property damage</option>
+                        <option value="hygiene">Cleanliness and hygiene</option>
+                        <option value="noise">Noise and disturbance</option>
+                        <option value="all">All of the above</option>
+                    </select>
+                </div>
+                <button class="btn-sign" onclick="signPetition()">✍️ SIGN PETITION NOW</button>
+            </div>
+
+            <!-- Current Signatures -->
+            <div class="signatures">
+                <div class="signature-count" id="signatureCount">0</div>
+                <div style="font-size: 14px; color: #666;">Residents Have Signed</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div style="font-size: 12px; margin-top: 5px;">Target: 50 signatures</div>
+                
+                <div class="signature-list" id="signatureList">
+                    <!-- Signatures will appear here -->
+                </div>
+            </div>
+
+            <!-- Share Section -->
+            <div class="share-section">
+                <h4>📢 Spread the Word!</h4>
+                <button class="btn-share" onclick="shareWhatsApp()">📱 Share on WhatsApp</button>
+                <button class="btn-report" onclick="generateReport()">📊 Generate Report</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Together we can make our apartment safe and clean! 🏡</p>
+            <p style="margin-top: 5px; font-size: 10px;">Campaign created for resident welfare</p>
+        </div>
+    </div>
+
+    <script>
+        let signatures = [];
+        const targetSignatures = 50;
+
+        function signPetition() {
+            const name = document.getElementById('fullName').value.trim();
+            const flat = document.getElementById('flatNumber').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+            const concern = document.getElementById('concern').value;
+
+            if (!name || !flat || !mobile) {
+                alert('⚠️ Please fill in all required fields!');
+                return;
+            }
+
+            if (mobile.length < 10) {
+                alert('⚠️ Please enter a valid mobile number!');
+                return;
+            }
+
+            // Check if already signed
+            if (signatures.some(sig => sig.flat === flat || sig.mobile === mobile)) {
+                alert('❌ This flat/mobile has already signed!');
+                return;
+            }
+
+            const signature = {
+                name: name,
+                flat: flat,
+                mobile: mobile,
+                concern: concern || 'Not specified',
+                timestamp: new Date().toLocaleString()
+            };
+
+            signatures.push(signature);
+            updateSignatureDisplay();
+            
+            // Clear form
+            document.getElementById('fullName').value = '';
+            document.getElementById('flatNumber').value = '';
+            document.getElementById('mobile').value = '';
+            document.getElementById('concern').value = '';
+
+            alert('✅ Thank you for signing! Your voice matters.');
+        }
+
+        function updateSignatureDisplay() {
+            const count = signatures.length;
+            document.getElementById('signatureCount').textContent = count;
+            
+            const progressPercent = Math.min((count / targetSignatures) * 100, 100);
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+
+            const listElement = document.getElementById('signatureList');
+            listElement.innerHTML = '';
+            
+            signatures.slice(-10).reverse().forEach(sig => {
+                const item = document.createElement('div');
+                item.className = 'signature-item';
+                item.innerHTML = `
+                    <strong>${sig.name}</strong> - Flat ${sig.flat}<br>
+                    <small>Concern: ${sig.concern} | ${sig.timestamp}</small>
+                `;
+                listElement.appendChild(item);
+            });
+        }
+
+        function shareWhatsApp() {
+            const currentUrl = window.location.href;
+            const message = `🚨 URGENT: Help solve stray dog issues in our apartment!
+
+Problems:
+🩸 Dog fights with blood stains
+🚗 Property damage  
+🦠 Unhygienic conditions
+😰 Safety concerns
+
+Current signatures: ${signatures.length}/${targetSignatures}
+
+Sign now: ${currentUrl}
+
+#SafeApartment #ResidentWelfare`;
+
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function generateReport() {
+            if (signatures.length === 0) {
+                alert('❌ No signatures to generate report!');
+                return;
+            }
+
+            const report = generateDetailedReport();
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Stray_Dog_Petition_Report_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function generateDetailedReport() {
+            const date = new Date().toLocaleDateString();
+            let report = `STRAY DOG MANAGEMENT PETITION REPORT
+Generated on: ${date}
+========================================
+
+SUMMARY:
+Total Signatures: ${signatures.length}
+Target: ${targetSignatures}
+Progress: ${Math.round((signatures.length / targetSignatures) * 100)}%
+
+MAIN CONCERNS:
+`;
+
+            const concerns = {};
+            signatures.forEach(sig => {
+                concerns[sig.concern] = (concerns[sig.concern] || 0) + 1;
+            });
+
+            Object.entries(concerns).forEach(([concern, count]) => {
+                report += `- ${concern}: ${count} residents (${Math.round((count/signatures.length)*100)}%)\n`;
+            });
+
+            report += `\nDETAILED SIGNATURES:\n`;
+            report += `========================================\n`;
+
+            signatures.forEach((sig, index) => {
+                report += `${index + 1}. ${sig.name} - Flat ${sig.flat}\n`;
+                report += `   Mobile: ${sig.mobile}\n`;
+                report += `   Concern: ${sig.concern}\n`;
+                report += `   Signed: ${sig.timestamp}\n\n`;
+            });
+
+            report += `RECOMMENDATIONS:
+1. Contact local animal control authorities
+2. Install proper fencing and gates
+3. Coordinate with apartment management
+4. Set up feeding stations away from residential areas
+5. Consider professional animal relocation services
+
+This petition represents the collective voice of ${signatures.length} residents demanding immediate action.`;
+
+            return report;
+        }
+
+        // Load saved signatures on page load
+        window.onload = function() {
+            const saved = localStorage.getItem('strayDogSignatures');
+            if (saved) {
+                signatures = JSON.parse(saved);
+                updateSignatureDisplay();
+            }
+        };
+
+        // Save signatures whenever updated
+        function saveSignatures() {
+            localStorage.setItem('strayDogSignatures', JSON.stringify(signatures));
+        }
+
+        // Override the signPetition function to include saving
+        const originalSignPetition = signPetition;
+        signPetition = function() {
+            originalSignPetition();
+            saveSignatures();
+        };
+    </script>
+</body>
+</html>
