@@ -504,7 +504,12 @@
         }
 
         function shareWhatsApp() {
+            // Make sure we have the latest count
+            currentCount = getGlobalCount();
+            
             const currentUrl = window.location.href;
+            const progressPercent = Math.round((currentCount / targetSignatures) * 100);
+            
             const message = `🚨 URGENT: Help solve stray dog issues in our apartment!
 
 Problems:
@@ -513,11 +518,12 @@ Problems:
 🦠 Unhygienic conditions
 😰 Safety concerns
 
-Current signatures: ${currentCount}/${targetSignatures}
+📊 Current: ${currentCount}/${targetSignatures} signatures (${progressPercent}%)
+🎯 We need YOUR signature!
 
 Sign now: ${currentUrl}
 
-⚠️ Only one signature per person allowed
+⚠️ Only one signature per person
 Takes just 30 seconds! 🙏
 
 #SafeApartment #ResidentWelfare`;
